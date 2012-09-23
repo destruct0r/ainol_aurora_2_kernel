@@ -2023,7 +2023,7 @@ static struct notifier_block vout_notifier =
 {
     .notifier_call  = vout_notify_callback,
 };
-int ppmgr_register()
+int ppmgr_register(void)
 {    
 	vf_ppmgr_init_provider();
 	vf_ppmgr_init_receiver();

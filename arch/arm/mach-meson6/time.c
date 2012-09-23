@@ -330,8 +330,8 @@ static void __init meson_timer_setup(struct clock_event_device *evt, unsigned i 
 }
 static void __init meson_clockevent_init(void)
 {
-    int i;
-    struct meson_clock * clk;
+    /* int i; */
+    /* struct meson_clock * clk; */
     /***
      * Disable Timer A~D, and clean the time base 
      * Now all of the timer is 1us base

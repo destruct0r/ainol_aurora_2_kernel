@@ -85,8 +85,6 @@ static int vidio_set_fmt_ticks=0;
 static int hi253_h_active=800;
 static int hi253_v_active=600;
 
-static int hi253_have_open=0;
-
 /* supported controls */
 static struct v4l2_queryctrl hi253_qctrl[] = {
 	/*{
@@ -3056,7 +3054,6 @@ static void aml_hi253_late_resume(struct early_suspend *h)
 static int hi253_probe(struct i2c_client *client,
 			const struct i2c_device_id *id)
 {
-	int pgbuf;
 	int err;
 	struct hi253_device *t;
 	struct v4l2_subdev *sd;

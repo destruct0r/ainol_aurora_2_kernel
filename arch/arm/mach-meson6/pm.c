@@ -50,11 +50,12 @@ static int early_suspend_flag = 0;
 //#define EARLY_SUSPEND_USE_XTAL
 //#define MESON_SUSPEND_DEBUG
 
-static void (*meson_sram_suspend)(struct meson_pm_config *);
+/* static void (*meson_sram_suspend)(struct meson_pm_config *); */
 static struct meson_pm_config *pdata;
 //static int mask_save_0[5];
 //static int mask_save_1[5];
 
+/*
 static void meson_sram_push(void *dest, void *src, unsigned int size)
 {
     int res = 0;
@@ -63,6 +64,7 @@ static void meson_sram_push(void *dest, void *src, unsigned int size)
     res = memcmp(dest, src, size);
     printk("compare code in sram addr = 0x%x, size = 0x%x, result = %d", (unsigned)dest, size, res);
 }
+*/
 
 #define GATE_OFF(_MOD) do {power_gate_flag[GCLK_IDX_##_MOD] = IS_CLK_GATE_ON(_MOD);CLK_GATE_OFF(_MOD);} while(0)
 #define GATE_ON(_MOD) do {if (power_gate_flag[GCLK_IDX_##_MOD]) CLK_GATE_ON(_MOD);} while(0)
@@ -238,7 +240,7 @@ static char early_clks_name[EARLY_CLK_COUNT][32] = {
 #endif
 };
 #if 1
-static void wait_uart_empty()
+static void wait_uart_empty(void)
 {
     unsigned int count=0;
     do{
@@ -441,7 +443,9 @@ void early_clk_switch(int flag)
 EXPORT_SYMBOL(early_clk_switch);
 
 #define PLL_COUNT 3
-static char pll_flag[PLL_COUNT];
+
+#if 0
+static char pll_flag[PLL_COUNT;
 static unsigned plls[PLL_COUNT] = {
     P_HHI_VID_PLL_CNTL,
     P_HHI_VIID_PLL_CNTL,
@@ -455,7 +459,8 @@ static char plls_name[PLL_COUNT][32] = {
 //    "HHI_AUD_PLL_CNTL",
     "HHI_MPLL_CNTL",
 };
-
+#endif
+		     
 #define EARLY_PLL_COUNT 2
 static char early_pll_flag[EARLY_PLL_COUNT];
 static unsigned early_pll_settings[EARLY_PLL_COUNT][4];
@@ -706,6 +711,11 @@ static void meson_system_early_suspend(struct early_suspend *h)
     }
 }
 
+
+#ifdef CONFIG_SUSPEND_WATCHDOG
+extern void reset_watchdog(void);
+#endif
+
 static void meson_system_late_resume(struct early_suspend *h)
 {
     if (early_suspend_flag) {
@@ -719,9 +729,8 @@ static void meson_system_late_resume(struct early_suspend *h)
         printk(KERN_INFO "sys_resume\n");
     }
 #ifdef CONFIG_SUSPEND_WATCHDOG
-	extern void reset_watchdog(void);
 	reset_watchdog();
-#endif    
+#endif
 }
 #endif
 
@@ -729,11 +738,20 @@ static void meson_system_late_resume(struct early_suspend *h)
 #define         MODE_IRQ_DELAYED_WAKE   1
 #define         MODE_IRQ_ONLY_WAKE      2
 
-static void auto_clk_gating_setup(
-    unsigned long sleep_dly_tb, unsigned long mode, unsigned long clear_fiq, unsigned long clear_irq,
-    unsigned long   start_delay, unsigned long   clock_gate_dly, unsigned long   sleep_time, unsigned long   enable_delay)
-{
-}
+/* static void auto_clk_gating_setup( */
+/*     unsigned long sleep_dly_tb, unsigned long mode, unsigned long clear_fiq, unsigned long clear_irq, */
+/*     unsigned long   start_delay, unsigned long   clock_gate_dly, unsigned long   sleep_time, unsigned long   enable_delay) */
+/* { */
+/* } */
+
+
+#ifdef CONFIG_SUSPEND_WATCHDOG
+extern void enable_watchdog(void);
+#endif
+
+#ifdef CONFIG_MESON_SUSPEND
+extern int meson_power_suspend(void);
+#endif
 
 
 static void meson_pm_suspend(void)
@@ -746,7 +764,6 @@ static void meson_pm_suspend(void)
 
     printk(KERN_INFO "enter meson_pm_suspend!\n");
 #ifdef CONFIG_SUSPEND_WATCHDOG
-	extern void enable_watchdog(void);
 	enable_watchdog();
 #endif    
 
@@ -821,14 +838,13 @@ static void meson_pm_suspend(void)
     }
 #else
 #ifdef CONFIG_MESON_SUSPEND
-extern int meson_power_suspend();
     meson_power_suspend();
 #else
     /**
      * @todo you should not enable irq with a directly register operation 
      *       Please replace it with setup_irq .
      */
-		aml_set_reg32_mask(P_SYS_CPU_0_IRQ_IN2_INTR_MASK, pdata->power_key); //enable rtc interrupt only
+    aml_set_reg32_mask(P_SYS_CPU_0_IRQ_IN2_INTR_MASK, pdata->power_key); //enable rtc interrupt only
     meson_sram_suspend(pdata);
 #endif
 #endif
@@ -965,7 +981,7 @@ static struct platform_suspend_ops meson_pm_ops = {
     .valid        = suspend_valid_only_mem,
 };
 
-static power_off_unused_pll(void)
+static void power_off_unused_pll(void)
 {
     aml_write_reg32(P_HHI_MPLL_CNTL7, 0x01082000); //turn off mp0
     aml_write_reg32(P_HHI_MPLL_CNTL8, 0x01082000); //turn off mp1

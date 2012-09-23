@@ -223,7 +223,7 @@ int32_t pinmux_set(pinmux_set_t* pinmux )
 {
 	uint32_t locallock[P_PIN_MUX_REG_NUM];
     uint32_t reg,value,conflict,dest_value;
-	ulong flags;
+	/* ulong flags; */
 	int i;
 	DECLARE_WAITQUEUE(wait, current);
 	if(pinmux==NULL)
@@ -283,7 +283,7 @@ retry:
 EXPORT_SYMBOL(pinmux_set);
 int32_t pinmux_clr(pinmux_set_t* pinmux)
 {
-	ulong flags;
+	/* ulong flags; */
 	int i;
     
 	if(pinmux==NULL)
@@ -363,7 +363,7 @@ bool gpio_get_status(uint32_t pin)
 {
 	unsigned bit,reg;
 
-	bool bret;
+	/* bool bret; */
 	reg=(pad_gpio_bit[pin]>>5)&0xf;
 	bit=(pad_gpio_bit[pin])&0x1f;
 

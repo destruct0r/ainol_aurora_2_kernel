@@ -150,9 +150,9 @@ static int  check_osc_clk(void)
 	WR_RTC(AO_RTC_ADDR3, RD_RTC(AO_RTC_ADDR3) | (1 << 17));   // Enable count always    
 
 	RTC_DBG(RTC_DBG_VAL, "aml_rtc -- check os clk_1\n");
-	osc_clk_count1 = RD_RTC(AO_RTC_ADDR2);    // Wait for 50uS.  32.768khz is 30.5uS.  This should be long   
-										// enough for one full cycle of 32.768 khz   
-	RTC_DBG(RTC_DBG_VAL, "the aml_rtc os clk 1 is %d\n", (unsigned int)osc_clk_count1);									
+	osc_clk_count1 = RD_RTC(AO_RTC_ADDR2); // Wait for 50uS.  32.768khz is 30.5uS.  This should be long   
+					       // enough for one full cycle of 32.768 khz   
+	RTC_DBG(RTC_DBG_VAL, "the aml_rtc os clk 1 is %d\n", (unsigned int)osc_clk_count1);	
 	delay_us( 50 );   
 	osc_clk_count2 = RD_RTC(AO_RTC_ADDR2);    
 	RTC_DBG(RTC_DBG_VAL, "the aml_rtc os clk 2 is %d\n", (unsigned int)osc_clk_count2);

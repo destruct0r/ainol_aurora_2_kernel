@@ -93,9 +93,7 @@ static struct irqaction fake_fiq = {
 static DEFINE_SPINLOCK(lock);
 void request_fiq(unsigned fiq, void (*isr)(void))
 {
-    int i;
     ulong flags;
-    int fiq_share = 0;
 
     BUG_ON(fiq >= NR_IRQS) ;
     BUG_ON(fiq_isr[fiq]!=NULL);
@@ -113,9 +111,7 @@ void request_fiq(unsigned fiq, void (*isr)(void))
 EXPORT_SYMBOL(request_fiq);
 void free_fiq(unsigned fiq, void (*isr)(void))
 {
-    int i;
     ulong flags;
-    int fiq_share = 0;
 
     spin_lock_irqsave(&lock, flags);
     fiq_isr[fiq]=NULL;

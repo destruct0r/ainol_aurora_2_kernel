@@ -923,9 +923,9 @@ inline void meson_set_cpu_ctrl_reg(int value)
 	spin_unlock(&clockfw_lock);
 }
 
-static unsigned long cpu_sleep_max_count = 0;
-static unsigned long cpu_wait_max_count = 0;
-static unsigned tag_print=0;
+/* static unsigned long cpu_sleep_max_count = 0; */
+/* static unsigned long cpu_wait_max_count = 0; */
+/* static unsigned tag_print=0; */
 static inline unsigned long meson_smp_wait_others(unsigned status)
 {
 	unsigned long count = 0;
@@ -1024,7 +1024,7 @@ static int clk_set_rate_a9(struct clk *clk, unsigned long rate)
 	if(freq_limit && rate > 1200000000)
 	{
 		rate = 1200000000;
-		printk("cpu freq limited to %d \n", rate);
+		printk("cpu freq limited to %ld \n", rate);
 	}		
 #ifdef CONFIG_SMP
 #if USE_ON_EACH_CPU
@@ -1080,6 +1080,7 @@ static int set_clk81_clock(int rate)
     }
     aml_read_reg32(P_HHI_MPEG_CLK_CNTL);
     aml_set_reg32_bits(P_HHI_MPEG_CLK_CNTL, 1, 8, 1);
+    return 0;
 }
 
 int check_and_set_clk81(void)
@@ -1093,7 +1094,7 @@ int check_and_set_clk81(void)
 
 static int cal_final_clk81_clk(int rate)
 {
-    int ret;
+    int ret = 100000000;
     if (rate <= 100000000) {//100M
         ret = 100000000;
     } else if (rate > 100000000 && rate <= 118000000) {//111M
@@ -1115,7 +1116,7 @@ static int clk_set_rate_clk81(struct clk *clk, unsigned long rate)
     if (cal_final_clk81_clk(rate) == clk81_rate)
         return 0;
     printk("pre clk81 rate is %d\n", clk81_rate);
-    printk("new clk81 rate is %d\n", rate);
+    printk("new clk81 rate is %ld\n", rate);
     
     clk81_target_rate = rate;
     
@@ -1133,6 +1134,7 @@ static int clk_set_rate_clk81(struct clk *clk, unsigned long rate)
     aml_set_reg32_bits(P_AO_UART_CONTROL, ((clk81_rate / (115200 * 4)) - 1) & 0xfff, 0, 12);
     printk("                          \n");
     printk("clk81 switch to %d\n", clk81_rate);
+    return 0;
 }
 
 static unsigned long clk_get_rate_gpu(struct clk * clkdev)

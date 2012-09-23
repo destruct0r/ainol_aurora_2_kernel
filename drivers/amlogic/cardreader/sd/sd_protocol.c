@@ -589,7 +589,7 @@ static int myt1 = 0;
 
 extern struct completion dat0_int_complete;
 
-int sdxc_check_dat0_ready()
+int sdxc_check_dat0_ready(void)
 {
 	unsigned int sdxc_status = READ_CBUS_REG(SD_REG3_STAT);
 	SDXC_Status_Reg_t *sdxc_status_reg = (void *)&sdxc_status;
@@ -5098,7 +5098,7 @@ SD_Card_Type_t sd_mmc_check_present(SD_MMC_Card_Info_t *sd_mmc_info)
 //Check if any card is inserted according to pull up resistor
 int sd_mmc_check_insert(SD_MMC_Card_Info_t *sd_mmc_info)
 {
-	int level, level_tmp;
+	int level;
 	int init_flag = sd_mmc_info->init_retry | sd_mmc_info->inited_flag;
 	
 	if(sd_mmc_info->sd_mmc_get_ins)

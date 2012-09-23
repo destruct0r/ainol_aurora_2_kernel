@@ -1420,7 +1420,7 @@ static pinmux_set_t aml_uart_ao = {
     .pinmux = &uart_pins[0]
 };
 
-static struct aml_uart_platform  __initdata aml_uart_plat = {
+static struct aml_uart_platform  aml_uart_plat = {
     .uart_line[0]   = UART_AO,
     .uart_line[1]   = UART_A,
     .uart_line[2]   = UART_B,
@@ -1569,14 +1569,10 @@ static struct platform_device aml_nand_device = {
 #ifdef  CONFIG_AM_WIFI
 #define DBG_LINE_INFO()  printk(KERN_INFO "[%s] in\n",__func__)
 
-/* WIFI ON Flag */
-static int WIFI_ON;
-/* BT ON Flag */
-static int BT_ON;
 static void wifi_gpio_init(void)
 {
-//set status
-    //WIFI_EN WIFI_PWREN  WLAN_RST --->out	:0
+	//set status
+	//WIFI_EN WIFI_PWREN  WLAN_RST --->out	:0
 	gpio_set_status(PAD_GPIOC_8,gpio_status_out);
 	//WIFI_WAKE -->1GPIOX_11   in	:
     	gpio_set_status(PAD_GPIOX_11,gpio_status_in);
@@ -2095,7 +2091,7 @@ static  int __init setup_usb_devices(void)
 /* built-in usb wifi power ctrl, usb dongle must register NULL to power_ctrl! 1:power on  0:power off */
 #ifdef CONFIG_AM_WIFI
 #ifdef CONFIG_AM_WIFI_USB
-static void usb_wifi_power(int is_power)
+static int usb_wifi_power(int is_power)
 {
     printk(KERN_INFO "usb_wifi_power %s\n", is_power ? "On" : "Off");
 //    CLEAR_CBUS_REG_MASK(PERIPHS_PIN_MUX_1,(1<<11));
