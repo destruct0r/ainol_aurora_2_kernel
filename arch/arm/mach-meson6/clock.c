@@ -45,8 +45,8 @@ static DEFINE_SPINLOCK(mali_clk_lock);
 static DEFINE_SPINLOCK(clockfw_lock);
 static DEFINE_MUTEX(clock_ops_lock);
 
-static unsigned int mali_max = 333000;
-static unsigned int freq_limit = 1;
+static unsigned int mali_max = 400000;
+static unsigned int freq_limit = 0;
 
 static int set_sys_pll(struct clk *clk, unsigned long src, unsigned long dst, unsigned * scale_divn);
 #define IS_CLK_ERR(a)  (IS_ERR(a) || a == 0)
@@ -894,7 +894,7 @@ static int _clk_set_rate_cpu(struct clk *clk, unsigned long cpu, unsigned long g
 
 	clk->rate = cpu; 
  
-	pr_debug("(CTS_CPU_CLK) CPU %ld.%ldMHz\n",  clk_get_rate_a9(clk) / 1000000,clk_get_rate_a9(clk)%1000000);
+	//pr_debug("(CTS_CPU_CLK) CPU %ld.%ldMHz\n",  clk_get_rate_a9(clk) / 1000000,clk_get_rate_a9(clk)%1000000);
 	return 0;
 }
 
@@ -1023,7 +1023,7 @@ static int clk_set_rate_a9(struct clk *clk, unsigned long rate)
 
 	if(freq_limit && rate > 1200000000)
 	{
-		rate = 1200000000;
+		rate = 1512000000;
 		printk("cpu freq limited to %ld \n", rate);
 	}		
 #ifdef CONFIG_SMP
@@ -1493,8 +1493,8 @@ static unsigned sys_pll_settings[][6] = {
 	{0x0023e, M6_SYS_PLL_CNTL_2, M6_SYS_PLL_CNTL_3, M6_SYS_PLL_CNTL_4, 0},  // 1488
 	{0x0023f, M6_SYS_PLL_CNTL_2, M6_SYS_PLL_CNTL_3, M6_SYS_PLL_CNTL_4, 0},  // 1512
 };
-static unsigned setup_a9_clk_max=1200000000;
-static unsigned setup_a9_clk_min=48000000;
+static unsigned setup_a9_clk_max = 1512000000;
+static unsigned setup_a9_clk_min = 48000000;
 static int __init a9_clk_max(char *str)
 {
 
@@ -1505,7 +1505,7 @@ static int __init a9_clk_max(char *str)
     BUG_ON(setup_a9_clk_min>setup_a9_clk_max);
     return 0;
 }
-early_param("a9_clk_max", a9_clk_max);
+//early_param("a9_clk_max", a9_clk_max);
 static int __init a9_clk_min(char *str)
 {
     unsigned long  clk = clkparse(str, 0);
@@ -1516,7 +1516,7 @@ static int __init a9_clk_min(char *str)
     return 0;
 }
 
-early_param("a9_clk_min", a9_clk_min);
+//early_param("a9_clk_min", a9_clk_min);
 static int set_sys_pll(struct clk *clk, unsigned long src, unsigned long dst, unsigned * scale_divn)
 {
 	int idx;

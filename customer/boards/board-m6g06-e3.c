@@ -538,13 +538,13 @@ static struct meson_opp vcck_opp_table[] = {
     /* freq must be in descending order */
     {
         .freq   = 1500000,
-        .min_uV = 1309000,
-        .max_uV = 1309000,
+        .min_uV = 1300000,
+        .max_uV = 1300000,
     },
     {
         .freq   = 1320000,
-        .min_uV = 1309000,
-        .max_uV = 1309000,
+        .min_uV = 1223000,
+        .max_uV = 1223000,
     },
     {
         .freq   = 1200000,
